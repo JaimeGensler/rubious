@@ -1,6 +1,6 @@
 module Config
     CONFIG = {
-        path: "~/Desktop",
+        path: "..",
         default_gems: ["pry", "rspec"]
     }
 end
