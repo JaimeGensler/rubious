@@ -1,6 +1,7 @@
 #!/user/bin/ruby
 require './lib/setup.rb'
 require 'colorize'
+
 wizard = SetupWizard.new
 
 system "clear"
@@ -11,9 +12,11 @@ wizard.create_new(gets)
 puts ""
 
 puts "What Gems do you want?"
-wizard.write_gemfile(gets)
+wizard.get_gems(gets)
 puts ""
 
 puts "What classes would you like?"
 wizard.make_classes(gets)
 puts ""
+
+wizard.open_project

@@ -27,8 +27,12 @@ class SetupWizard
         @proj_classes = make_array(proj_classes)
         @proj_classes.each do |user_class|
             File.write("#{@proj_path}/lib/#{user_class}.rb", "class #{user_class.capitalize}\nend")
-            File.write("#{@proj_path}/spec/#{user_class}_spec.rb", "describe \'#{user_class}\' do\n    describe('#') do\n    end\nend")
+            File.write("#{@proj_path}/spec/#{user_class}_spec.rb", "require \'rspec\'\nrequire \'#{user_class}\'\n\ndescribe \'#{user_class.capitalize}\' do\n    describe('#') do\n    end\nend")
         end
+    end
+
+    def open_project
+        system "atom #{@proj_path}"
     end
 
     private
