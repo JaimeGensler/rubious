@@ -29,6 +29,7 @@ class SetupWizard
         setup_type
         setup_gems
         setup_classes
+        setup_git
         system "atom #{@proj_path}"
     end
 
@@ -49,6 +50,11 @@ class SetupWizard
         @proj_classes.each do |user_class|
             write_lib(user_class)
             write_spec(user_class)
+        end
+    end
+    def setup_git
+        if (CONFIG[:git_instructions][:make_first_commit?])
+            system "git init #{@proj_path}"
         end
     end
 
