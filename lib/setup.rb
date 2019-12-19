@@ -6,37 +6,62 @@ class SetupWizard
     include Config
     include Assets
     include Writer
+    CONFIG[:path].gsub!(/(\s)*(\/)\z/, "")
 
-    def new_project(proj_name)
+    def start(proj_name)
         @proj_name = proj_name.downcase.strip.gsub(/\s+/,"_").gsub(/\W/, "")
         @proj_path = "#{CONFIG[:path] || ".."}/#{@proj_name}"
-        system "mkdir #{@proj_path}"
-        system "mkdir #{@proj_path}/lib #{@proj_path}/spec #{@proj_path}/views #{@proj_path}/public"
+    end
+    def get_gems(new_gems)
+        @proj_gems = (CONFIG[:default_gems] || []) + make_array(new_gems)
+    end
+    def get_classes(new_classes)
+        @proj_classes = make_array(new_classes)
+    end
+    def finish
+        create_project
     end
 
-    def setup_gems(add_gems)
-        @proj_gems = (CONFIG[:default_gems] || []) + make_array(add_gems)
+    private
+
+    def create_project
+        system "mkdir #{@proj_path}"
+        setup_type
+        setup_gems
+        setup_classes
+        system "atom #{@proj_path}"
+    end
+
+    def setup_type
+        type = CONFIG[:project_type] || "basic"
+        system "mkdir #{@proj_path}/lib #{@proj_path}/spec"
+        if (type == "sinatra")
+            system "mkdir #{@proj_path}/views #{@proj_path}/public"
+            write_layout
+            write_app
+        end
+    end
+    def setup_gems
         write_gemfile(@proj_gems)
-        # //something like this needs to happen for windows:
-        # system "gem install --install-dir #{@proj_path} bundler"
         system "bundle install --gemfile=#{@proj_path}/Gemfile"
     end
-
-    def setup_classes(proj_classes)
-        @proj_classes = make_array(proj_classes)
+    def setup_classes
         @proj_classes.each do |user_class|
             write_lib(user_class)
             write_spec(user_class)
         end
     end
 
-    def open_project
-        system "atom #{@proj_path}"
+
+    NA = ["na", "none", "nothing", "nil", "n", "a"]
+    def make_array(str)
+        list = str.downcase.strip.split(/[\/ .,-]+/).uniq
+        list.reject do |word|
+            NA.any? {|reg| /\A#{reg}\z/i.match? word}
+        end
     end
 
-    private
-    NA = ["NA", "na", "none", "nothing", "nil", nil]
-    def make_array(str)
-        str.downcase.strip.split(/[\/ .,-]+/).uniq.reject {|e| NA.include? e}
+    def read_classes
+        #interpret something like this: "Album (@@albums, #init, #update, .all)"
     end
 end
