@@ -6,17 +6,21 @@ wizard = SetupWizard.new
 
 system "clear"
 wizard.inject_header
+puts ""
 
 puts "What would you like you to call your project?"
-wizard.create_new(gets)
+print "  ➢ ".blink
+wizard.new_project(gets)
 puts ""
 
 puts "What Gems do you want?"
-wizard.get_gems(gets)
+print "  ➢".blink
+wizard.setup_gems(gets)
 puts ""
 
 puts "What classes would you like?"
-wizard.make_classes(gets)
+print "  ➢".blink
+wizard.setup_classes(gets)
 puts ""
 
 wizard.open_project

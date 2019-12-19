@@ -1,33 +1,32 @@
 require './config.rb'
 require './lib/assets.rb'
+require './lib/writer.rb'
 
 class SetupWizard
-    include Assets
     include Config
+    include Assets
+    include Writer
 
-    def create_new(proj_name)
+    def new_project(proj_name)
         @proj_name = proj_name.downcase.strip.gsub(/\s+/,"_").gsub(/\W/, "")
-        @proj_path = "#{CONFIG[:path]}/#{@proj_name}"
+        @proj_path = "#{CONFIG[:path] || ".."}/#{@proj_name}"
         system "mkdir #{@proj_path}"
         system "mkdir #{@proj_path}/lib #{@proj_path}/spec #{@proj_path}/views #{@proj_path}/public"
     end
 
-    def get_gems(proj_gems)
-        @proj_gems = CONFIG[:default_gems] + make_array(proj_gems)
-
-        File.open("#{@proj_path}/Gemfile", "w+") do |f|
-            f.puts("source 'https://rubygems.org'\n\n")
-            @proj_gems.each { |gem| f.puts("gem '#{gem}'") }
-        end
+    def setup_gems(add_gems)
+        @proj_gems = (CONFIG[:default_gems] || []) + make_array(add_gems)
+        write_gemfile(@proj_gems)
+        # //something like this needs to happen for windows:
         # system "gem install --install-dir #{@proj_path} bundler"
         system "bundle install --gemfile=#{@proj_path}/Gemfile"
     end
 
-    def make_classes(proj_classes)
+    def setup_classes(proj_classes)
         @proj_classes = make_array(proj_classes)
         @proj_classes.each do |user_class|
-            File.write("#{@proj_path}/lib/#{user_class}.rb", "class #{user_class.capitalize}\nend")
-            File.write("#{@proj_path}/spec/#{user_class}_spec.rb", "require \'rspec\'\nrequire \'#{user_class}\'\n\ndescribe \'#{user_class.capitalize}\' do\n    describe('#') do\n    end\nend")
+            write_lib(user_class)
+            write_spec(user_class)
         end
     end
 
@@ -36,7 +35,8 @@ class SetupWizard
     end
 
     private
+    NA = ["NA", "na", "none", "nothing", "nil", nil]
     def make_array(str)
-        str.downcase().strip.split(/[\/ .,]+/)
+        str.downcase.strip.split(/[\/ .,-]+/).uniq.reject {|e| NA.include? e}
     end
 end

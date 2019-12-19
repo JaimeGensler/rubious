@@ -1,6 +1,6 @@
 require 'colorize'
 module Assets
-    HEADER = [
+    TITLE = [
         "              ██████╗ ██╗   ██╗██████╗ ██╗ ██████╗ ██╗   ██╗███████╗            ",
         "              ██╔══██╗██║   ██║██╔══██╗██║██╔═══██╗██║   ██║██╔════╝            ",
         "              ██████╔╝██║   ██║██████╔╝██║██║   ██║██║   ██║███████╗            ",
@@ -9,13 +9,15 @@ module Assets
         "              ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝            "
     ]
     BORDER = " °º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°` "
-    SPACER = "                                   "
+    SPACER = "                                                                                "
+    WELCOME = "                                   Welcome to                                   "
 
     def inject_header
+        puts SPACER.on_black
         puts BORDER.colorize(:white).on_black
-        puts (SPACER + "Welcome to" + SPACER).colorize(:white).on_black.blink
-        HEADER.each{|ln| puts (ln.colorize(:red).on_black)}
+        puts WELCOME.colorize(:white).on_black
+        TITLE.each{|ln| puts (ln.colorize(:red).on_black)}
         puts BORDER.colorize(:white).on_black
-        puts "".colorize(:white).on_black
+        puts SPACER.on_black
     end
 end
