@@ -38,7 +38,7 @@ class SetupWizard
         system "mkdir #{@proj_path}/lib #{@proj_path}/spec"
         if (type == "sinatra")
             system "mkdir #{@proj_path}/views #{@proj_path}/public"
-            @proj_gems += ["sinatra", "sinatra-contrib", "capybara"]
+            @proj_gems = (@proj_gems + ["sinatra", "sinatra-contrib", "capybara"]).uniq
             write_layout
             write_app
         end
@@ -61,13 +61,11 @@ class SetupWizard
 
     def make_array(str)
         NA = ["na", "none", "nothing", "nil", "n", "a"]
-        list = str.downcase.strip.split(/[\/ .,]+/).uniq
-        list.reject do |word|
-            NA.any? {|reg| /\A#{reg}\z/i.match? word}
-        end
+        list = str.downcase.strip.split(/[\/, ]+/).uniq
+        list.reject {|word| (NA.any? {|rej| /\A#{rej}\z/i.match? word}) }
     end
 
-    def read_classes
-        #interpret something like this: "Album (@@albums, #init, #update, .all)"
+    def read_classes(str)
+        #interpret something like this: "Album (@@albums, #update, .all)"
     end
 end
