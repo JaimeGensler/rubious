@@ -38,6 +38,7 @@ class SetupWizard
         system "mkdir #{@proj_path}/lib #{@proj_path}/spec"
         if (type == "sinatra")
             system "mkdir #{@proj_path}/views #{@proj_path}/public"
+            @proj_gems += ["sinatra", "sinatra-contrib", "capybara"]
             write_layout
             write_app
         end
@@ -58,10 +59,9 @@ class SetupWizard
         end
     end
 
-
-    NA = ["na", "none", "nothing", "nil", "n", "a"]
     def make_array(str)
-        list = str.downcase.strip.split(/[\/ .,-]+/).uniq
+        NA = ["na", "none", "nothing", "nil", "n", "a"]
+        list = str.downcase.strip.split(/[\/ .,]+/).uniq
         list.reject do |word|
             NA.any? {|reg| /\A#{reg}\z/i.match? word}
         end
