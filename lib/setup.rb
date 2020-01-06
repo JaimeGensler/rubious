@@ -59,8 +59,8 @@ class SetupWizard
         end
     end
 
+    NA = ["na", "none", "nothing", "nil", "n", "a"]
     def make_array(str)
-        NA = ["na", "none", "nothing", "nil", "n", "a"]
         list = str.downcase.strip.split(/[\/, ]+/).uniq
         list.reject {|word| (NA.any? {|rej| /\A#{rej}\z/i.match? word}) }
     end

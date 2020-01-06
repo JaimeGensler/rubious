@@ -1,5 +1,7 @@
 require 'colorize'
 module Assets
+    WELCOME = "                                   Welcome to                                   "
+    SPACER = "                                                                                "
     TITLE = [
         "              ██████╗ ██╗   ██╗██████╗ ██╗ ██████╗ ██╗   ██╗███████╗            ",
         "              ██╔══██╗██║   ██║██╔══██╗██║██╔═══██╗██║   ██║██╔════╝            ",
@@ -9,8 +11,6 @@ module Assets
         "              ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝            "
     ]
     BORDER = " °º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸¸,ø¤º°` "
-    SPACER = "                                                                                "
-    WELCOME = "                                   Welcome to                                   "
 
     def inject_header
         puts SPACER.on_black

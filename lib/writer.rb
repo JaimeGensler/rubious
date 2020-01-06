@@ -2,7 +2,7 @@ require './config.rb'
 
 module Writer
     include Config
-    TAB =  " " * (CONFIG[:tab_space] || 2)
+    TAB =  " " * (CONFIG[:tab_space] || 4)
 
     def write_layout
         title = @proj_name.split("_").map(&:capitalize).join(" ")
@@ -23,12 +23,11 @@ module Writer
         File.open("#{@proj_path}/app.rb", "w+") do |ln|
             ln.puts "require \'sinatra\'"
             ln.puts "require \'sinatra/reloader\'"
-            ln.puts "require \'./lib/album\'"
-            ln.puts "require \'./lib/song\'"
+            ln.puts "require \'./lib/*\'"
             ln.puts "require \'pry\'"
             ln.puts "also_reload \'lib/**/*.rb\'"
             ln.puts ""
-            ln.puts "get(\'/\') do"
+            ln.puts "get \'/\' do"
             ln.puts "end"
         end
     end
