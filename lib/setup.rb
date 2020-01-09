@@ -3,7 +3,7 @@ require './lib/assets.rb'
 require './lib/writer.rb'
 
 class SetupWizard
-    include Config
+    # include Config
     include Assets
     include Writer
     CONFIG[:path].gsub!(/(\s)*(\/)\z/, "")

@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+
+<% @project_gems.each do |gem|%>
+gem '<%= gem %>'
+<% end %>

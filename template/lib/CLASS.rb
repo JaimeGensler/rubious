@@ -15,4 +15,4 @@ class ClassName
     end
 end
 
-# [A-Z][A-Za-z_]+( ?\([A-Za-z@.#, ]*\))?
+# [A-Z][A-Za-z]+( ?\([A-Za-z@.#, ]*\))?
