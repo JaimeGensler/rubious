@@ -60,16 +60,15 @@ class SetupWizard
     end
 
     def read_classes(str)
-        arr = str.scan(/[A-Z][A-Za-z]+(?> ?\([A-Za-z@.#, ]*\))?/)
+        arr = str.scan(/[A-Z][a-zA-Z]+(?> ?\([A-Za-z@.#, ]*\))?/)
         arr.reduce({}) do |acc, elem|
-            key = elem.scan(/[A-Z][a-z]+/)[0]
-            val = {
-                in_vars: elem.scan(/\@[a-z]+/).map {|e| e.delete('@')},
-                cl_vars: elem.scan(/\@\@[a-z]+/).map {|e| e.delete('@')},
+            key = elem.scan(/[A-Z][a-zA-Z]+/)[0]
+            acc[key] = {
+                in_vars: elem.scan(/[^@]\@[a-z]+/).map {|e| e.delete('@')},
+                cl_vars: elem.scan(/\@{2}[a-z]+/).map {|e| e.delete('@')},
                 in_meths: elem.scan(/\#[a-z]+/).map {|e| e.delete('#')},
                 cl_meths: elem.scan(/\.[a-z]+/).map {|e| e.delete('.')}
             }
-            acc[key] = val
             acc
         end
     end
