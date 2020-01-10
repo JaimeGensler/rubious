@@ -1,7 +1,4 @@
-# require './config.rb'
-
 module Writer
-    # include Config
     TAB =  " " * (CONFIG[:tab_space] || 4)
 
     def write_layout

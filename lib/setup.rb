@@ -1,9 +1,7 @@
-require './config.rb'
 require './lib/assets.rb'
 require './lib/writer.rb'
 
 class SetupWizard
-    # include Config
     include Assets
     include Writer
     CONFIG[:path].gsub!(/(\s)*(\/)\z/, "")
@@ -19,12 +17,6 @@ class SetupWizard
         @proj_classes = make_array(new_classes)
     end
     def finish
-        create_project
-    end
-
-    private
-
-    def create_project
         system "mkdir #{@proj_path}"
         setup_type
         setup_gems
@@ -32,6 +24,8 @@ class SetupWizard
         setup_git
         system "atom #{@proj_path}"
     end
+
+    private
 
     def setup_type
         type = CONFIG[:project_type] || "basic"
@@ -62,10 +56,21 @@ class SetupWizard
     NA = ["na", "none", "nothing", "nil", "n", "a"]
     def make_array(str)
         list = str.downcase.strip.split(/[\/, ]+/).uniq
-        list.reject {|word| (NA.any? {|rej| /\A#{rej}\z/i.match? word}) }
+        list.reject {|word| (NA.any? {|nul| /\A#{nul}\z/i.match? word}) }
     end
 
     def read_classes(str)
-        #interpret something like this: "Album (@@albums, #update, .all)"
+        arr = str.scan(/[A-Z][A-Za-z]+(?> ?\([A-Za-z@.#, ]*\))?/)
+        arr.reduce({}) do |acc, elem|
+            key = elem.scan(/[A-Z][a-z]+/)[0]
+            val = {
+                in_vars: elem.scan(/\@[a-z]+/).map {|e| e.delete('@')},
+                cl_vars: elem.scan(/\@\@[a-z]+/).map {|e| e.delete('@')},
+                in_meths: elem.scan(/\#[a-z]+/).map {|e| e.delete('#')},
+                cl_meths: elem.scan(/\.[a-z]+/).map {|e| e.delete('.')}
+            }
+            acc[key] = val
+            acc
+        end
     end
 end
